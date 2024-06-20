@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marine_focus/widget/bottom_bar.dart';
 import 'package:marine_focus/widget/top_bar.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +21,10 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Marine focus'),
+      home: ChangeNotifierProvider(
+        create: (context) => CurrentDestination(),
+        child: const MyHomePage(title: 'Marine focus'),
+      ),
     );
   }
 }
@@ -47,19 +51,24 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TopBar(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: Consumer<CurrentDestination>(
+        builder: (context, currentDestination, child) => [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'You have pushed the button this many times:',
+                ),
+                Text(
+                  '$_counter',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+          ),
+        ][AvailableDestinations.values
+            .indexOf(currentDestination.currentDestination)],
       ),
       bottomNavigationBar: const BottomBar(),
     );
