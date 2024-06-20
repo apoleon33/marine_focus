@@ -10,6 +10,9 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
       title: const Text(
         "Marine focus",
       ),
+      actions: const <Widget>[
+        IconButton(onPressed: null, icon: Icon(Icons.person))
+      ],
     );
   }
 
