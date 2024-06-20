@@ -6,7 +6,7 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
-      destinations: AvailablesDestination.values
+      destinations: AvailableDestinations.values
           .map((e) => NavigationDestination(
                 icon: Icon(e.icon),
                 selectedIcon: Icon(e.selectedIcon),
@@ -17,7 +17,7 @@ class BottomBar extends StatelessWidget {
   }
 }
 
-enum AvailablesDestination {
+enum AvailableDestinations {
   home(Icons.home_outlined, Icons.home, "Home"),
   aquarium(Icons.set_meal_outlined, Icons.set_meal, "Aquarium"),
   store(Icons.store_outlined, Icons.store, "Store");
@@ -26,5 +26,5 @@ enum AvailablesDestination {
   final IconData selectedIcon;
   final String label;
 
-  const AvailablesDestination(this.icon, this.selectedIcon, this.label);
+  const AvailableDestinations(this.icon, this.selectedIcon, this.label);
 }
