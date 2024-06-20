@@ -7,34 +7,20 @@ class BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return NavigationBar(
       destinations: AvailablesDestination.values
-          .map((e) => NavigationDestinationFormatter(availablesDestination: e))
+          .map((e) => NavigationDestination(
+                icon: Icon(e.icon),
+                selectedIcon: Icon(e.selectedIcon),
+                label: e.label,
+              ))
           .toList(),
     );
   }
 }
 
-class NavigationDestinationFormatter extends StatelessWidget {
-  final AvailablesDestination availablesDestination;
-
-  const NavigationDestinationFormatter({
-    super.key,
-    required this.availablesDestination,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return NavigationDestination(
-      icon: Icon(availablesDestination.icon),
-      selectedIcon: Icon(availablesDestination.selectedIcon),
-      label: availablesDestination.label,
-    );
-  }
-}
-
 enum AvailablesDestination {
-  HOME(Icons.home_outlined, Icons.home, "Home"),
-  AQUARIUM(Icons.set_meal_outlined, Icons.set_meal, "Aquarium"),
-  STORE(Icons.store_outlined, Icons.store, "Store");
+  home(Icons.home_outlined, Icons.home, "Home"),
+  aquarium(Icons.set_meal_outlined, Icons.set_meal, "Aquarium"),
+  store(Icons.store_outlined, Icons.store, "Store");
 
   final IconData icon;
   final IconData selectedIcon;
