@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:marine_focus/util/timer/pomodoro_states.dart';
-import 'package:marine_focus/util/timer/pomodoro_types.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
@@ -38,7 +36,6 @@ class _BottleState extends State<Bottle> {
   }
 
   double get heightFromDuration {
-    if (widget.pomodoroTimer.pomodoroState != PomodoroState.started) return defaultContainerHeight;
     return _map(
       widget.pomodoroTimer.timeElapsed.inSeconds,
       0,
@@ -107,10 +104,13 @@ class _BottleState extends State<Bottle> {
               bottomLeft: Radius.circular(22.0),
               bottomRight: Radius.circular(22.0),
             ),
-            child: Container(
-              width: 300,
-              height: heightFromDuration,
-              color: Theme.of(context).colorScheme.primaryContainer,
+            child: AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              child: Container(
+                width: 300,
+                height: heightFromDuration,
+                color: Theme.of(context).colorScheme.primaryContainer,
+              ),
             ),
           ),
           _createWave(context),
@@ -125,6 +125,7 @@ class _BottleState extends State<Bottle> {
 }
 
 extension DurationPrettyPrint on Duration {
+  /// Small method to get the duration in the `mm:ss` format.
   String prettyPrint() {
     final List<String> dividedTime = toString().split(":");
     return "${dividedTime[1]}:${dividedTime[2].split(".")[0]}";
