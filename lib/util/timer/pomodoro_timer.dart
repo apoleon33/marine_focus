@@ -61,14 +61,13 @@ class PomodoroTimer {
     );
   }
 
-  Duration get timeLeft {
-    return dateTimeRange.end.difference(DateTime.now());
-  }
+  Duration get timeLeft => (hasStarted)
+      ? dateTimeRange.end.difference(DateTime.now())
+      : pomodoroTypes.duration;
 
-  Duration get timeElapsed {
-    return DateTimeRange(start: dateTimeRange.start, end: DateTime.now())
-        .duration;
-  }
+  Duration get timeElapsed => (hasStarted)
+      ? DateTimeRange(start: dateTimeRange.start, end: DateTime.now()).duration
+      : const Duration();
 
   bool get hasStarted => pomodoroState == PomodoroState.started;
 

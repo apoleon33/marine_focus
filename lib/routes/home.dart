@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:marine_focus/widgets/bottle.dart';
 
@@ -42,7 +40,11 @@ class _HomeState extends State<Home> {
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: () {
-                    if (buttonState == ButtonState.start) pomodoroTimer.start();
+                    if (buttonState == ButtonState.start) {
+                      pomodoroTimer.start();
+                    } else {
+                      pomodoroTimer = PomodoroTimer();
+                    }
                     setState(() {
                       buttonState = buttonState.toggle;
                     });
