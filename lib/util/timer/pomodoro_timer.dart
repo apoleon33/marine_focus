@@ -2,51 +2,85 @@ import 'package:flutter/material.dart';
 import 'package:marine_focus/util/timer/pomodoro_states.dart';
 import 'package:marine_focus/util/timer/pomodoro_types.dart';
 
+// TODO: add a way to pause and resume the timer.
 class PomodoroTimer {
-  final PomodoroTypes pomodoroTypes;
-
-  PomodoroState pomodoroState = PomodoroState.notStarted;
+  late final PomodoroTypes pomodoroTypes;
+  late PomodoroState pomodoroState;
   late DateTimeRange dateTimeRange;
 
-  DateTime? _pauseDate;
-  late DateTime startTime;
+  PomodoroTimer._init({
+    required this.pomodoroState,
+    required this.pomodoroTypes,
+    required this.dateTimeRange,
+  });
 
-  void _initTimer() {
-    startTime = DateTime.now();
-    dateTimeRange = DateTimeRange(
-      start: startTime,
-      end: startTime.add(pomodoroTypes.duration),
+  /// Create a Pomodoro timer with already [elapsedTime] done.
+  static PomodoroTimer customTimeElapsed({
+    required Duration elapsedTime,
+    PomodoroState? pomodoroState,
+    PomodoroTypes? pomodoroTypes,
+  }) {
+    pomodoroState =
+        (pomodoroState != null) ? pomodoroState : PomodoroState.notStarted;
+    pomodoroTypes =
+        (pomodoroTypes != null) ? pomodoroTypes : PomodoroTypes.pomodoro;
+
+    DateTime dateNow = DateTime.now().subtract(elapsedTime);
+
+    return PomodoroTimer._init(
+      pomodoroState: pomodoroState,
+      pomodoroTypes: pomodoroTypes,
+      dateTimeRange: DateTimeRange(
+        start: dateNow,
+        end: dateNow.add(pomodoroTypes.duration),
+      ),
     );
   }
 
-  PomodoroTimer({required this.pomodoroTypes, pomodoroState}) {
-    _initTimer();
-    this.pomodoroState = pomodoroState ?? PomodoroState.notStarted;
+  PomodoroTimer({PomodoroState? pomodoroState, PomodoroTypes? pomodoroTypes}) {
+    pomodoroState =
+        (pomodoroState != null) ? pomodoroState : PomodoroState.notStarted;
+    pomodoroTypes =
+        (pomodoroTypes != null) ? pomodoroTypes : PomodoroTypes.pomodoro;
+
+    DateTime dateNow = DateTime.now();
+    dateTimeRange = DateTimeRange(
+      start: dateNow,
+      end: dateNow.add(pomodoroTypes.duration),
+    );
+    this.pomodoroTypes = pomodoroTypes;
+    this.pomodoroState = pomodoroState;
+
+    PomodoroTimer._init(
+      pomodoroState: pomodoroState,
+      pomodoroTypes: pomodoroTypes,
+      dateTimeRange: DateTimeRange(
+        start: dateNow,
+        end: dateNow.add(pomodoroTypes.duration),
+      ),
+    );
   }
+
+  Duration get timeLeft {
+    return dateTimeRange.end.difference(DateTime.now());
+  }
+
+  Duration get timeElapsed {
+    return DateTimeRange(start: dateTimeRange.start, end: DateTime.now())
+        .duration;
+  }
+
+  bool get hasStarted => pomodoroState == PomodoroState.started;
 
   /// Start the Pomodoro timer.
   void start() {
     pomodoroState = PomodoroState.started;
-    _initTimer();
-  }
 
-  /// Pause the Pomodoro timer.
-  void pause() {
-    pomodoroState = PomodoroState.paused;
-    _pauseDate = DateTime.now();
-  }
-
-  /// Resume the Pomodoro timer.
-  /// Time has to have been paused before.
-  void resume() {
-    assert(_pauseDate != null);
-    final pauseDuration = DateTime.now().difference(_pauseDate!);
+    // update when we are
+    DateTime dateNow = DateTime.now();
     dateTimeRange = DateTimeRange(
-      start: dateTimeRange.start.add(pauseDuration),
-      end: dateTimeRange.end.add(pauseDuration),
+      start: dateNow,
+      end: dateNow.add(pomodoroTypes.duration),
     );
-    pomodoroState = PomodoroState.started;
   }
-
-  Duration get timeLeft => dateTimeRange.end.difference(DateTime.now());
 }

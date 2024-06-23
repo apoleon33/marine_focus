@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:marine_focus/util/timer/pomodoro_types.dart';
 import 'package:marine_focus/widgets/bottle.dart';
 
 import '../util/timer/pomodoro_timer.dart';
@@ -12,7 +13,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  PomodoroTimer? pomodoroTimer;
+  late PomodoroTimer pomodoroTimer;
+  late ButtonState buttonState;
+
+  @override
+  void initState() {
+    super.initState();
+
+    buttonState = ButtonState.start;
+    // test by creating a pomodoro timer with already 10 minutes elapsed.
+    pomodoroTimer = PomodoroTimer();
+  }
 
   @override
   Widget build(BuildContext context) => Column(
@@ -21,9 +32,7 @@ class _HomeState extends State<Home> {
           Padding(
             padding: const EdgeInsets.only(top: 26.0),
             child: Bottle(
-              pomodoroTimer: PomodoroTimer(
-                pomodoroTypes: PomodoroTypes.pomodoro,
-              ),
+              pomodoroTimer: pomodoroTimer,
             ),
           ),
           Padding(
@@ -32,12 +41,37 @@ class _HomeState extends State<Home> {
               child: SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: () {},
-                  child: const Text("START TIMER"),
+                  onPressed: () {
+                    if (buttonState == ButtonState.start) pomodoroTimer.start();
+                    setState(() {
+                      buttonState = buttonState.toggle;
+                    });
+                  },
+                  child: Text(buttonState.label),
                 ),
               ),
             ),
           )
         ],
       );
+}
+
+enum ButtonState {
+  start("START TIMER"),
+  stop("STOP TIMER");
+
+  final String label;
+
+  const ButtonState(this.label);
+}
+
+extension ButtonStateExtension on ButtonState {
+  ButtonState get toggle {
+    switch (this) {
+      case ButtonState.start:
+        return ButtonState.stop;
+      case ButtonState.stop:
+        return ButtonState.start;
+    }
+  }
 }
