@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
     super.initState();
 
     buttonState = ButtonState.start;
-    // test by creating a pomodoro timer with already 10 minutes elapsed.
+
     pomodoroTimer = PomodoroTimer();
   }
 
@@ -42,8 +42,6 @@ class _HomeState extends State<Home> {
                   onPressed: () {
                     if (buttonState == ButtonState.start) {
                       pomodoroTimer.start();
-                    } else {
-                      pomodoroTimer = PomodoroTimer();
                     }
                     setState(() {
                       buttonState = buttonState.toggle;

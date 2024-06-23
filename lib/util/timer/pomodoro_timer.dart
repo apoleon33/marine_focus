@@ -15,6 +15,7 @@ class PomodoroTimer {
   });
 
   /// Create a Pomodoro timer with already [elapsedTime] done.
+  @Deprecated("It's litteraly not working")
   static PomodoroTimer customTimeElapsed({
     required Duration elapsedTime,
     PomodoroState? pomodoroState,
