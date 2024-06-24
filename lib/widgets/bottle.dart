@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:marine_focus/util/timer/pomodoro_states.dart';
+import 'package:marine_focus/widgets/animated_wave.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
@@ -98,7 +100,7 @@ class _BottleState extends State<Bottle> {
       ),
       child: Column(
         verticalDirection: VerticalDirection.up,
-        children: [
+        children: <Widget>[
           ClipRRect(
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(22.0),
@@ -114,7 +116,7 @@ class _BottleState extends State<Bottle> {
               ),
             ),
           ),
-          _createWave(context),
+          AnimatedWave(pomodoroState: widget.pomodoroTimer.pomodoroState,),
           Text(
             widget.pomodoroTimer.timeLeft.prettyPrint(),
             style: Theme.of(context).textTheme.displayLarge,
