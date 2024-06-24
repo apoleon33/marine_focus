@@ -14,30 +14,6 @@ class PomodoroTimer {
     required this.dateTimeRange,
   });
 
-  /// Create a Pomodoro timer with already [elapsedTime] done.
-  @Deprecated("It's litteraly not working")
-  static PomodoroTimer customTimeElapsed({
-    required Duration elapsedTime,
-    PomodoroState? pomodoroState,
-    PomodoroTypes? pomodoroTypes,
-  }) {
-    pomodoroState =
-        (pomodoroState != null) ? pomodoroState : PomodoroState.notStarted;
-    pomodoroTypes =
-        (pomodoroTypes != null) ? pomodoroTypes : PomodoroTypes.pomodoro;
-
-    DateTime dateNow = DateTime.now().subtract(elapsedTime);
-
-    return PomodoroTimer._init(
-      pomodoroState: pomodoroState,
-      pomodoroTypes: pomodoroTypes,
-      dateTimeRange: DateTimeRange(
-        start: dateNow,
-        end: dateNow.add(pomodoroTypes.duration),
-      ),
-    );
-  }
-
   PomodoroTimer({PomodoroState? pomodoroState, PomodoroTypes? pomodoroTypes}) {
     pomodoroState =
         (pomodoroState != null) ? pomodoroState : PomodoroState.notStarted;
