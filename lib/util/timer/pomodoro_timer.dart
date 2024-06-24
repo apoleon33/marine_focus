@@ -3,7 +3,6 @@ import 'package:marine_focus/util/timer/already_started_pomodoro_timer.dart';
 import 'package:marine_focus/util/timer/pomodoro_states.dart';
 import 'package:marine_focus/util/timer/pomodoro_types.dart';
 
-// TODO: add a way to pause and resume the timer.
 class PomodoroTimer {
   late final PomodoroTypes pomodoroTypes;
   late PomodoroState pomodoroState;
@@ -16,26 +15,15 @@ class PomodoroTimer {
   });
 
   PomodoroTimer({PomodoroState? pomodoroState, PomodoroTypes? pomodoroTypes}) {
-    pomodoroState =
+    this.pomodoroState =
         (pomodoroState != null) ? pomodoroState : PomodoroState.notStarted;
-    pomodoroTypes =
+    this.pomodoroTypes =
         (pomodoroTypes != null) ? pomodoroTypes : PomodoroTypes.pomodoro;
 
     DateTime dateNow = DateTime.now();
     dateTimeRange = DateTimeRange(
       start: dateNow,
-      end: dateNow.add(pomodoroTypes.duration),
-    );
-    this.pomodoroTypes = pomodoroTypes;
-    this.pomodoroState = pomodoroState;
-
-    PomodoroTimer._init(
-      pomodoroState: pomodoroState,
-      pomodoroTypes: pomodoroTypes,
-      dateTimeRange: DateTimeRange(
-        start: dateNow,
-        end: dateNow.add(pomodoroTypes.duration),
-      ),
+      end: dateNow.add(this.pomodoroTypes.duration),
     );
   }
 
@@ -46,6 +34,9 @@ class PomodoroTimer {
   Duration get timeElapsed => (hasStarted)
       ? DateTimeRange(start: dateTimeRange.start, end: DateTime.now()).duration
       : const Duration();
+
+  bool get isFinished =>
+      dateTimeRange.start.add(pomodoroTypes.duration).isBefore(DateTime.now());
 
   bool get hasStarted => pomodoroState == PomodoroState.started;
 
