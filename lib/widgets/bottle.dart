@@ -2,10 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:marine_focus/util/timer/pomodoro_states.dart';
 import 'package:marine_focus/widgets/animated_wave.dart';
-import 'package:wave/config.dart';
-import 'package:wave/wave.dart';
 
 import '../util/timer/pomodoro_timer.dart';
 
@@ -44,35 +41,6 @@ class _BottleState extends State<Bottle> {
       widget.pomodoroTimer.pomodoroTypes.duration.inSeconds,
       defaultContainerHeight.toInt(),
       maxLiquidHeight.toInt(),
-    );
-  }
-
-  Widget _createWave(BuildContext context) {
-    List<Color> colors = [
-      const Color.fromRGBO(0, 33, 49, 1.0),
-      const Color.fromRGBO(0, 50, 75, 1.0),
-      Theme.of(context).colorScheme.primaryContainer,
-    ];
-
-    const durations = [
-      18000,
-      8000,
-      5000,
-    ];
-
-    const heightPercentages = [
-      0.65,
-      0.66,
-      0.68,
-    ];
-    return WaveWidget(
-      config: CustomConfig(
-        colors: colors,
-        durations: durations,
-        heightPercentages: heightPercentages,
-      ),
-      size: const Size(300, 40),
-      waveAmplitude: 0,
     );
   }
 
