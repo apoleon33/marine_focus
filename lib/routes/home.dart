@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:marine_focus/util/timer/pomodoro_types.dart';
 import 'package:marine_focus/widgets/bottle.dart';
 
 import '../util/timer/pomodoro_timer.dart';
@@ -20,7 +21,7 @@ class _HomeState extends State<Home> {
 
     buttonState = ButtonState.start;
 
-    pomodoroTimer = PomodoroTimer();
+    pomodoroTimer = PomodoroTimer(pomodoroTypes: PomodoroTypes.shortBreak);
   }
 
   @override
@@ -42,6 +43,8 @@ class _HomeState extends State<Home> {
                   onPressed: () {
                     if (buttonState == ButtonState.start) {
                       pomodoroTimer.start();
+                    } else {
+                      pomodoroTimer = pomodoroTimer.pause();
                     }
                     setState(() {
                       buttonState = buttonState.toggle;

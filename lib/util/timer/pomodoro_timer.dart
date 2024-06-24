@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:marine_focus/util/timer/already_started_pomodoro_timer.dart';
 import 'package:marine_focus/util/timer/pomodoro_states.dart';
 import 'package:marine_focus/util/timer/pomodoro_types.dart';
 
@@ -59,4 +60,11 @@ class PomodoroTimer {
       end: dateNow.add(pomodoroTypes.duration),
     );
   }
+
+  /// **Return** a new [PomodoroTimer] object with the previous time already elapsed.
+  PomodoroTimer pause() => AlreadyStartedPomodoroTimer(
+        initialDuration: timeElapsed,
+        pomodoroTypes: pomodoroTypes,
+        pomodoroState: PomodoroState.paused,
+      );
 }

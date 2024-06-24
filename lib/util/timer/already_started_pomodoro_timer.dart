@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:marine_focus/util/timer/pomodoro_states.dart';
 import 'package:marine_focus/util/timer/pomodoro_timer.dart';
 
-/// Class to start a timer with already a time elapsed
 class AlreadyStartedPomodoroTimer extends PomodoroTimer {
   final Duration initialDuration;
 
+  /// Class to start a timer with already a time elapsed.
   AlreadyStartedPomodoroTimer({
     required this.initialDuration,
     super.pomodoroState,
@@ -22,6 +22,11 @@ class AlreadyStartedPomodoroTimer extends PomodoroTimer {
       end: dateNow.add(pomodoroTypes.duration),
     );
   }
+
+  @override
+  Duration get timeLeft => (hasStarted)
+      ? dateTimeRange.end.difference(DateTime.now())
+      : pomodoroTypes.duration - initialDuration;
 
   @override
   Duration get timeElapsed => (hasStarted)

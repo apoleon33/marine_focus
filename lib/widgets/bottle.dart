@@ -106,6 +106,7 @@ class _BottleState extends State<Bottle> {
             ),
             child: AnimatedSize(
               duration: const Duration(milliseconds: 300),
+              alignment: Alignment.bottomCenter,
               child: Container(
                 width: 300,
                 height: heightFromDuration,
