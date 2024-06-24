@@ -17,7 +17,7 @@ class Bottle extends StatefulWidget {
 
 class _BottleState extends State<Bottle> {
   final double defaultContainerHeight = 24.0;
-  final double maxLiquidHeight = 455.0;
+  final double maxLiquidHeight = 440.0;
 
   @override
   void initState() {
@@ -66,28 +66,43 @@ class _BottleState extends State<Bottle> {
           bottomRight: radiusDecoration,
         ),
       ),
-      child: Column(
-        verticalDirection: VerticalDirection.up,
+      child: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
         children: <Widget>[
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(22.0),
-              bottomRight: Radius.circular(22.0),
-            ),
-            child: AnimatedSize(
-              duration: const Duration(milliseconds: 300),
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: 300,
-                height: heightFromDuration,
-                color: Theme.of(context).colorScheme.primaryContainer,
+          Column(
+            verticalDirection: VerticalDirection.up,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(22.0),
+                  bottomRight: Radius.circular(22.0),
+                ),
+                child: AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: 300,
+                    height: heightFromDuration,
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                  ),
+                ),
               ),
-            ),
+              AnimatedWave(pomodoroState: widget.pomodoroTimer.pomodoroState),
+            ],
           ),
-          AnimatedWave(pomodoroState: widget.pomodoroTimer.pomodoroState,),
-          Text(
-            widget.pomodoroTimer.timeLeft.prettyPrint(),
-            style: Theme.of(context).textTheme.displayLarge,
+          Column(
+            children: [
+              Text(
+                widget.pomodoroTimer.timeLeft.prettyPrint(),
+                style: Theme.of(context).textTheme.displayLarge,
+              ),
+              Text(
+                "Left",
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              )
+            ],
           ),
         ],
       ),

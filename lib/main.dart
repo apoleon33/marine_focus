@@ -32,14 +32,13 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TopBar(),
       body: Consumer<CurrentDestination>(
-        builder: (context, currentDestination, child) => currentDestination.currentDestination.route
-      ),
+          builder: (context, currentDestination, child) =>
+              currentDestination.currentDestination.route),
       bottomNavigationBar: const BottomBar(),
     );
   }
