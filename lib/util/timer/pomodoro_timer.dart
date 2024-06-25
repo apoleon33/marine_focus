@@ -7,12 +7,7 @@ class PomodoroTimer {
   late final PomodoroTypes pomodoroTypes;
   late PomodoroState pomodoroState;
   late DateTimeRange dateTimeRange;
-
-  PomodoroTimer._init({
-    required this.pomodoroState,
-    required this.pomodoroTypes,
-    required this.dateTimeRange,
-  });
+  ValueNotifier<bool> isFinishedNotifier = ValueNotifier<bool>(false);
 
   PomodoroTimer({PomodoroState? pomodoroState, PomodoroTypes? pomodoroTypes}) {
     this.pomodoroState =
@@ -27,16 +22,31 @@ class PomodoroTimer {
     );
   }
 
-  Duration get timeLeft => (hasStarted)
+  @mustCallSuper
+  Duration get timeLeft {
+    _actualisePomodoroState();
+    return (hasStarted)
       ? dateTimeRange.end.difference(DateTime.now())
       : pomodoroTypes.duration;
+  }
 
-  Duration get timeElapsed => (hasStarted)
-      ? DateTimeRange(start: dateTimeRange.start, end: DateTime.now()).duration
-      : const Duration();
+  @mustCallSuper
+  Duration get timeElapsed {
+    _actualisePomodoroState();
+    return (hasStarted)
+        ? DateTimeRange(start: dateTimeRange.start, end: DateTime.now())
+            .duration
+        : const Duration();
+  }
 
-  bool get isFinished =>
-      dateTimeRange.start.add(pomodoroTypes.duration).isBefore(DateTime.now());
+  bool get isFinished {
+    if (dateTimeRange.start
+        .add(pomodoroTypes.duration)
+        .isBefore(DateTime.now())) {
+      pomodoroState = PomodoroState.finished;
+    }
+    return pomodoroState == PomodoroState.finished;
+  }
 
   bool get hasStarted => pomodoroState == PomodoroState.started;
 
@@ -58,4 +68,9 @@ class PomodoroTimer {
         pomodoroTypes: pomodoroTypes,
         pomodoroState: PomodoroState.paused,
       );
+
+  /// Check if [pomodoroState] is still relevant, or if the timer is finished.
+  void _actualisePomodoroState() {
+    isFinishedNotifier.value = isFinished;
+  }
 }

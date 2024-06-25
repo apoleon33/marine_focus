@@ -24,12 +24,18 @@ class AlreadyStartedPomodoroTimer extends PomodoroTimer {
   }
 
   @override
-  Duration get timeLeft => (hasStarted)
+  Duration get timeLeft {
+    super.timeLeft;
+    return (hasStarted)
       ? dateTimeRange.end.difference(DateTime.now())
       : pomodoroTypes.duration - initialDuration;
+  }
 
   @override
-  Duration get timeElapsed => (hasStarted)
+  Duration get timeElapsed {
+    super.timeElapsed;
+    return (hasStarted)
       ? DateTimeRange(start: dateTimeRange.start, end: DateTime.now()).duration
       : initialDuration;
+  }
 }
