@@ -1,3 +1,5 @@
+import 'package:marine_focus/util/duration_pretty_print.dart';
+
 /// With the pomodoro method there are 3 types of timer:
 /// - [pomodoro]: 25 minutes where you do your task.
 /// - [shortBreak]: A 5 min pause.
@@ -31,4 +33,9 @@ enum PomodoroTypes {
   final Duration duration;
 
   const PomodoroTypes(this.duration);
+
+  @override
+  String toString() {
+    return duration.prettyPrint();
+  }
 }

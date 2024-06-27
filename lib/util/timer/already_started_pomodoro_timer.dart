@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:marine_focus/util/cache/cache_manager.dart';
+import 'package:marine_focus/util/duration_pretty_print.dart';
 import 'package:marine_focus/util/timer/pomodoro_states.dart';
 import 'package:marine_focus/util/timer/pomodoro_timer.dart';
+import 'package:marine_focus/util/timer/pomodoro_types.dart';
 
-class AlreadyStartedPomodoroTimer extends PomodoroTimer {
+class AlreadyStartedPomodoroTimer extends PomodoroTimer
+    implements CacheManager<AlreadyStartedPomodoroTimer> {
   final Duration initialDuration;
 
   /// Class to start a timer with already a time elapsed.
@@ -27,15 +31,41 @@ class AlreadyStartedPomodoroTimer extends PomodoroTimer {
   Duration get timeLeft {
     super.timeLeft;
     return (hasStarted)
-      ? dateTimeRange.end.difference(DateTime.now())
-      : pomodoroTypes.duration - initialDuration;
+        ? dateTimeRange.end.difference(DateTime.now())
+        : pomodoroTypes.duration - initialDuration;
   }
 
   @override
   Duration get timeElapsed {
     super.timeElapsed;
     return (hasStarted)
-      ? DateTimeRange(start: dateTimeRange.start, end: DateTime.now()).duration
-      : initialDuration;
+        ? DateTimeRange(start: dateTimeRange.start, end: DateTime.now())
+            .duration
+        : initialDuration;
   }
+
+  @override
+  AlreadyStartedPomodoroTimer createFromCache(List<String> args) {
+    final Duration initialDuration =
+        DurationPrettyPrint.createFromPrettyPrint(args[0]);
+
+    PomodoroTypes pomodoroTypes = PomodoroTypes.pomodori;
+    for (PomodoroTypes element in PomodoroTypes.values) {
+      if (element.duration ==
+          DurationPrettyPrint.createFromPrettyPrint(args[1])) {
+        pomodoroTypes = element;
+      }
+    }
+
+    return AlreadyStartedPomodoroTimer(
+      initialDuration: initialDuration,
+      pomodoroTypes: pomodoroTypes,
+    );
+  }
+
+  @override
+  List<String> toCache() => [
+        initialDuration.prettyPrint(),
+        pomodoroTypes.toString(),
+      ];
 }
