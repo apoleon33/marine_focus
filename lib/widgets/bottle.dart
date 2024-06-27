@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:marine_focus/util/duration_pretty_print.dart';
 import 'package:marine_focus/widgets/animated_wave.dart';
 
 import '../util/timer/pomodoro_timer.dart';
@@ -23,9 +23,13 @@ class _BottleState extends State<Bottle> {
   void initState() {
     super.initState();
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (kDebugMode) print(widget.pomodoroTimer.timeElapsed.inSeconds);
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   /// Re-maps a number from one range to another.
@@ -107,13 +111,5 @@ class _BottleState extends State<Bottle> {
         ],
       ),
     );
-  }
-}
-
-extension DurationPrettyPrint on Duration {
-  /// Small method to get the duration in the `mm:ss` format.
-  String prettyPrint() {
-    final List<String> dividedTime = toString().split(":");
-    return "${dividedTime[1]}:${dividedTime[2].split(".")[0]}";
   }
 }
