@@ -8,6 +8,7 @@ class Cache<T extends CacheManager<T>> {
 
   Cache(this.prefs, this.keyword);
 
+  /// Asynchronous constructor for [Cache], to already create the [prefs] attribute.
   static Future<Cache> initCache<T extends CacheManager<T>>(
     String keyword,
   ) async {
