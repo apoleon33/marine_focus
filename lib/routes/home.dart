@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:marine_focus/util/timer/already_started_pomodoro_timer.dart';
 import 'package:marine_focus/util/timer/pomodoro_states.dart';
 import 'package:marine_focus/util/timer/pomodoro_types.dart';
 import 'package:marine_focus/widgets/bottle.dart';
@@ -15,6 +16,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late PomodoroTimer _pomodoroTimer;
   late ButtonState buttonState;
+  int _pomodoroIndex = 0;
 
   @override
   void initState() {
@@ -22,7 +24,10 @@ class _HomeState extends State<Home> {
 
     buttonState = ButtonState.start;
 
-    pomodoroTimer = PomodoroTimer();
+    pomodoroTimer = AlreadyStartedPomodoroTimer(
+      initialDuration: const Duration(minutes: 24, seconds: 45),
+      pomodoroTypes: PomodoroTypes.pomodoroSteps[_pomodoroIndex],
+    );
 
     pomodoroTimer.isFinishedNotifier.addListener(() {
       if (pomodoroTimer.isFinished) {
@@ -74,12 +79,16 @@ class _HomeState extends State<Home> {
         },
       );
     });
+
+    _pomodoroIndex = (_pomodoroIndex + 1) % PomodoroTypes.pomodoroSteps.length;
     pomodoroTimer = PomodoroTimer(
-      pomodoroTypes: PomodoroTypes.shortBreak,
+      pomodoroTypes: PomodoroTypes.pomodoroSteps[_pomodoroIndex],
       pomodoroState: PomodoroState.notStarted,
     );
 
-    _toggleButton();
+    setState(() {
+      buttonState = ButtonState.start;
+    });
   }
 
   @override
