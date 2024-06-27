@@ -18,4 +18,8 @@ class Cache<T extends CacheManager<T>> {
     List<String>? args = prefs.getStringList(keyword);
     return (args != null) ? obj.createFromCache(args) : null;
   }
+
+  void writeToCache(T obj) {
+    prefs.setStringList(keyword, obj.toCache());
+  }
 }
