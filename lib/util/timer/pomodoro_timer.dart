@@ -13,7 +13,7 @@ class PomodoroTimer {
     this.pomodoroState =
         (pomodoroState != null) ? pomodoroState : PomodoroState.notStarted;
     this.pomodoroTypes =
-        (pomodoroTypes != null) ? pomodoroTypes : PomodoroTypes.pomodoro;
+        (pomodoroTypes != null) ? pomodoroTypes : PomodoroTypes.pomodori;
 
     DateTime dateNow = DateTime.now();
     dateTimeRange = DateTimeRange(
