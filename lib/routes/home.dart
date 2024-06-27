@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
 
     buttonState = ButtonState.start;
 
-    pomodoroTimer = PomodoroTimer(pomodoroTypes: PomodoroTypes.shortBreak);
+    pomodoroTimer = PomodoroTimer();
 
     pomodoroTimer.isFinishedNotifier.addListener(() {
       if (pomodoroTimer.isFinished) {
@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
   }
 
   void _toggleButton() {
-    if (buttonState == ButtonState.start) {
+    if (buttonState == ButtonState.start || buttonState == ButtonState.resume) {
       pomodoroTimer.start();
     } else {
       pomodoroTimer = pomodoroTimer.pause();
@@ -54,34 +54,38 @@ class _HomeState extends State<Home> {
 
   PomodoroTimer get pomodoroTimer => _pomodoroTimer;
 
+  void _changeTimer(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Timer Finished'),
+            content: const Text('The timer has finished running.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    });
+    pomodoroTimer = PomodoroTimer(
+      pomodoroTypes: PomodoroTypes.shortBreak,
+      pomodoroState: PomodoroState.notStarted,
+    );
+
+    _toggleButton();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (pomodoroTimer.isFinished) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Timer Finished'),
-              content: const Text('The timer has finished running.'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      });
-      pomodoroTimer = PomodoroTimer(
-        pomodoroTypes: PomodoroTypes.shortBreak,
-        pomodoroState: PomodoroState.notStarted,
-      );
-
-      _toggleButton();
+      _changeTimer(context);
     }
 
     return Column(
@@ -96,12 +100,46 @@ class _HomeState extends State<Home> {
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 46.0),
           child: Center(
-            child: SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: _toggleButton,
-                child: Text(buttonState.label),
-              ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                if (buttonState == ButtonState.resume) ...[
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FilledButton(
+                        onPressed: () {},
+                        style: FilledButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.errorContainer,
+                        ),
+                        child: Text(
+                          ButtonState.stop.label,
+                          style:
+                              Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onErrorContainer,
+                                  ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                Expanded(
+                  child: AnimatedSize(
+                    duration: const Duration(milliseconds: 150),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FilledButton(
+                        onPressed: _toggleButton,
+                        child: Text(buttonState.label),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         )
@@ -112,7 +150,9 @@ class _HomeState extends State<Home> {
 
 enum ButtonState {
   start("START TIMER"),
-  stop("STOP TIMER");
+  stop("STOP TIMER"),
+  pause("PAUSE TIMER"),
+  resume("RESUME TIMER");
 
   final String label;
 
@@ -123,9 +163,13 @@ extension ButtonStateExtension on ButtonState {
   ButtonState get toggle {
     switch (this) {
       case ButtonState.start:
-        return ButtonState.stop;
+        return ButtonState.pause;
+      case ButtonState.pause:
+        return ButtonState.resume;
       case ButtonState.stop:
         return ButtonState.start;
+      case ButtonState.resume:
+        return ButtonState.pause;
     }
   }
 }
