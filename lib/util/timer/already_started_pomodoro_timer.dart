@@ -49,13 +49,8 @@ class AlreadyStartedPomodoroTimer extends PomodoroTimer
     final Duration initialDuration =
         DurationPrettyPrint.createFromPrettyPrint(args[0]);
 
-    PomodoroTypes pomodoroTypes = PomodoroTypes.pomodori;
-    for (PomodoroTypes element in PomodoroTypes.values) {
-      if (element.duration ==
-          DurationPrettyPrint.createFromPrettyPrint(args[1])) {
-        pomodoroTypes = element;
-      }
-    }
+    final PomodoroTypes pomodoroTypes =
+        PomodoroTypes.values[int.parse(args[1])];
 
     return AlreadyStartedPomodoroTimer(
       initialDuration: initialDuration,
