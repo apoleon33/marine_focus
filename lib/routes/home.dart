@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:marine_focus/util/cache/cache.dart';
 import 'package:marine_focus/util/timer/already_started_pomodoro_timer.dart';
 import 'package:marine_focus/util/timer/pomodoro_states.dart';
 import 'package:marine_focus/util/timer/pomodoro_types.dart';
@@ -14,6 +15,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late final Cache cache;
   late PomodoroTimer _pomodoroTimer;
   late ButtonState buttonState;
   int _pomodoroIndex = 0;
@@ -29,11 +31,20 @@ class _HomeState extends State<Home> {
       pomodoroTypes: PomodoroTypes.pomodoroSteps[_pomodoroIndex],
     );
 
-    pomodoroTimer.isFinishedNotifier.addListener(() {
-      if (pomodoroTimer.isFinished) {
-        setState(() {});
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      cache = await Cache.initCache("timer", pomodoroTimer);
+      if (cache.isCacheWritten) {
+        setState(() {
+          pomodoroTimer = cache.getFromCache() as PomodoroTimer;
+        });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    cache.writeToCache();
   }
 
   void _toggleButton() {

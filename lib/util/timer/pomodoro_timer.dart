@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:marine_focus/util/cache/cache_manager.dart';
+import 'package:marine_focus/util/duration_pretty_print.dart';
 import 'package:marine_focus/util/timer/already_started_pomodoro_timer.dart';
 import 'package:marine_focus/util/timer/pomodoro_states.dart';
 import 'package:marine_focus/util/timer/pomodoro_types.dart';
 
-class PomodoroTimer {
+class PomodoroTimer implements CacheManager {
   late final PomodoroTypes pomodoroTypes;
   late PomodoroState pomodoroState;
   late DateTimeRange dateTimeRange;
@@ -26,8 +28,8 @@ class PomodoroTimer {
   Duration get timeLeft {
     _actualisePomodoroState();
     return (hasStarted)
-      ? dateTimeRange.end.difference(DateTime.now())
-      : pomodoroTypes.duration;
+        ? dateTimeRange.end.difference(DateTime.now())
+        : pomodoroTypes.duration;
   }
 
   @mustCallSuper
@@ -73,4 +75,31 @@ class PomodoroTimer {
   void _actualisePomodoroState() {
     isFinishedNotifier.value = isFinished;
   }
+
+  @override
+  AlreadyStartedPomodoroTimer createFromCache(List<String> args) {
+    final Duration initialDuration =
+        DurationPrettyPrint.createFromPrettyPrint(args[0]);
+
+    final PomodoroTypes pomodoroTypes =
+        PomodoroTypes.values[int.parse(args[1])];
+
+    final PomodoroState pomodoroState =
+        PomodoroState.values[int.parse(args[2])];
+
+    return AlreadyStartedPomodoroTimer(
+      initialDuration: initialDuration,
+      pomodoroTypes: pomodoroTypes,
+      pomodoroState: pomodoroState,
+    );
+  }
+
+  @mustCallSuper
+  @override
+  List<String> toCache() => [
+        // for compatibility with AlreadyStartedPomodoroTimer
+        const Duration().prettyPrint(),
+        pomodoroTypes.toString(),
+        pomodoroState.toString(),
+      ];
 }

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:marine_focus/util/cache/cache_manager.dart';
 import 'package:marine_focus/util/duration_pretty_print.dart';
 import 'package:marine_focus/util/timer/pomodoro_states.dart';
 import 'package:marine_focus/util/timer/pomodoro_timer.dart';
-import 'package:marine_focus/util/timer/pomodoro_types.dart';
 
-class AlreadyStartedPomodoroTimer extends PomodoroTimer
-    implements CacheManager<AlreadyStartedPomodoroTimer> {
+class AlreadyStartedPomodoroTimer extends PomodoroTimer {
   final Duration initialDuration;
 
   /// Class to start a timer with already a time elapsed.
@@ -45,22 +42,9 @@ class AlreadyStartedPomodoroTimer extends PomodoroTimer
   }
 
   @override
-  AlreadyStartedPomodoroTimer createFromCache(List<String> args) {
-    final Duration initialDuration =
-        DurationPrettyPrint.createFromPrettyPrint(args[0]);
-
-    final PomodoroTypes pomodoroTypes =
-        PomodoroTypes.values[int.parse(args[1])];
-
-    return AlreadyStartedPomodoroTimer(
-      initialDuration: initialDuration,
-      pomodoroTypes: pomodoroTypes,
-    );
+  List<String> toCache() {
+    List<String> superCache = super.toCache();
+    superCache[0] = initialDuration.prettyPrint();
+    return superCache;
   }
-
-  @override
-  List<String> toCache() => [
-        initialDuration.prettyPrint(),
-        pomodoroTypes.toString(),
-      ];
 }

@@ -5,4 +5,7 @@ enum PomodoroState {
   paused,
   cancelled,
   finished;
+
+  @override
+  String toString() => PomodoroState.values.indexOf(this).toString();
 }
