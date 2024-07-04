@@ -19,10 +19,12 @@ class Cache {
 
   CacheManager? getFromCache() {
     List<String>? args = prefs.getStringList(keyword);
+    print("args found in cache: $args");
     return (args != null) ? cacheManager.createFromCache(args) : null;
   }
 
   void writeToCache() {
+    print("wrote to cache object!: \n ${cacheManager.toCache()} depuis $cacheManager");
     prefs.setStringList(keyword, cacheManager.toCache());
   }
 

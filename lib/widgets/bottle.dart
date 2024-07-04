@@ -18,11 +18,12 @@ class Bottle extends StatefulWidget {
 class _BottleState extends State<Bottle> {
   final double defaultContainerHeight = 24.0;
   final double maxLiquidHeight = 440.0;
+  late final Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {});
     });
   }
@@ -30,6 +31,7 @@ class _BottleState extends State<Bottle> {
   @override
   void dispose() {
     super.dispose();
+    _timer.cancel();
   }
 
   /// Re-maps a number from one range to another.

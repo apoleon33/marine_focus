@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:marine_focus/util/duration_pretty_print.dart';
 import 'package:marine_focus/util/timer/pomodoro_states.dart';
 import 'package:marine_focus/util/timer/pomodoro_timer.dart';
 
@@ -42,9 +41,7 @@ class AlreadyStartedPomodoroTimer extends PomodoroTimer {
   }
 
   @override
-  List<String> toCache() {
-    List<String> superCache = super.toCache();
-    superCache[0] = initialDuration.prettyPrint();
-    return superCache;
+  String toString() {
+    return 'AlreadyStartedPomodoroTimer{initialDuration: $initialDuration, ${super.toString()}';
   }
 }
